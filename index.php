@@ -27,9 +27,10 @@ require_once($CFG->libdir.'/adminlib.php');
 
 //admin_externalpage_setup('tool_kholland');
 
-$id = optional_param('id', 0, PARAM_INT);
+//$id = optional_param('id', 0, PARAM_INT);
+$id = required_param('id', PARAM_INT);
 
-$PAGE->set_url(new moodle_url('/admin/tool/kholland/index.php'));
+$PAGE->set_url(new moodle_url('/admin/tool/kholland/index.php', array('id' => $id)));
 $PAGE->set_pagelayout('report');
 $PAGE->set_context(context_system::instance());
 $PAGE->set_title('Hello to the KHolland list');
