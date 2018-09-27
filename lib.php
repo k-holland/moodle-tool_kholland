@@ -22,6 +22,8 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * This function extends the navigation with the tool items
  *
@@ -30,13 +32,13 @@
  * @param context         $context    The context of the course
  */
 
+// This adds item to course settings section.
 function tool_kholland_extend_navigation_course($navigation, $course, $context) {
-        $url = new moodle_url('/admin/tool/kholland/index.php', array('id' => $course->id));
-        $settingsnode = navigation_node::create(get_string('navlink', 'tool_kholland'), $url, navigation_node::TYPE_SETTING,
-                null, null, new pix_icon('i/settings', ''));
-        $reportnode = $navigation->get('coursereports');
-
-        if (isset($settingsnode) && !empty($reportnode)) {
-            $reportnode->add_node($settingsnode);
-        }
+  $navigation->add(
+    get_string('pluginname', 'tool_kholland'),
+    new moodle_url('/admin/tool/kholland/index.php', ['id' => $course->id]),
+    navigation_node::TYPE_SETTING,
+    get_string('pluginname', 'tool_kholland'),
+    'kholland',
+    new pix_icon('icon', '', 'tool_kholland'));
 }

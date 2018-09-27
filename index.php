@@ -42,6 +42,16 @@ echo $OUTPUT->heading($PAGE->title);
 echo html_writer::div(get_string('hello', 'tool_kholland', $id));
 //echo(get_string('hello', 'tool_kholland'));
 
+        $fields = 'id, email, firstname, lastname, deleted, suspended, phone1, timezone, timecreated, url, idnumber, description, ';
+        $fields .= implode(", ", get_all_user_name_fields());
+
+        $users = $DB->get_records('user', array(), null, $fields);
+
+$table = new tool_kholland_manage_table($id);
+$table->out(5, false);
+
+//print_r ($users);
+
 echo $OUTPUT->footer();
 
 // Custom renderer
