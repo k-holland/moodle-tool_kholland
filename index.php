@@ -40,32 +40,17 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading($PAGE->title);
 
 echo html_writer::div(get_string('hello', 'tool_kholland', $id));
+$course = $DB->get_record_sql("SELECT shortname, fullname FROM {course} WHERE id = ?", [$id]);
+echo html_writer::div(format_string($course->fullname)); // You should use context here but
+// it will be introduced in the later versions.
 //echo(get_string('hello', 'tool_kholland'));
 
-        $fields = 'id, email, firstname, lastname, deleted, suspended, phone1, timezone, timecreated, url, idnumber, description, ';
-        $fields .= implode(", ", get_all_user_name_fields());
-
-        $users = $DB->get_records('user', array(), null, $fields);
-
-$table = new tool_kholland_manage_table($id);
-$table->out(5, false);
-
-//print_r ($users);
+//$table = new tool_kholland_manage_table($id);
+//$table->out(5, false);
 
 echo $OUTPUT->footer();
 
 // Custom renderer
-/*
-$output = $PAGE->get_renderer('tool_kholland');
- 
-echo $output->header();
-echo $output->heading($PAGE->title);
-
-//echo(get_string('hello', 'tool_kholland'));
-$renderable = new \tool_kholland\output\index_page(get_string('hello', 'tool_kholland'));
-echo $output->render($renderable);
-*/
-
 // Testing output functions here
 /*
 $userinput = 'no <b>tags</b> allowed in strings';
@@ -80,4 +65,3 @@ echo html_writer::div(format_text($userinput)); // Used for multil-line rich-tex
 */
  
 echo $output->footer();
-//echo(get_string('hello', 'tool_kholland'));
