@@ -22,7 +22,7 @@
  
 defined('MOODLE_INTERNAL') || die();
  
-$plugin->version = 2018091902;
+$plugin->version = 2018091903;
 $plugin->requires = 2018051700;
 $plugin->cron = 0;
 $plugin->component = 'tool_kholland';
