@@ -25,9 +25,6 @@
 require(__DIR__.'/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 
-//admin_externalpage_setup('tool_kholland');
-
-//$id = optional_param('id', 0, PARAM_INT);
 $id = required_param('id', PARAM_INT);
 
 $PAGE->set_url(new moodle_url('/admin/tool/kholland/index.php', array('id' => $id)));
@@ -45,8 +42,8 @@ echo html_writer::div(format_string($course->fullname)); // You should use conte
 // it will be introduced in the later versions.
 //echo(get_string('hello', 'tool_kholland'));
 
-//$table = new tool_kholland_manage_table($id);
-//$table->out(5, false);
+$table = new tool_kholland_table('tool_kholland', $id);
+$table->out(0, false);
 
 echo $OUTPUT->footer();
 
