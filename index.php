@@ -27,9 +27,11 @@ require_once($CFG->libdir.'/adminlib.php');
 
 $id = required_param('id', PARAM_INT);
 
+require_login($id);
+$context = context_course::instance($id);
+require_capability('tool/kholland:view', $context);
+
 $PAGE->set_url(new moodle_url('/admin/tool/kholland/index.php', array('id' => $id)));
-$PAGE->set_pagelayout('report');
-$PAGE->set_context(context_system::instance());
 $PAGE->set_title('Hello to the KHolland list');
 $PAGE->set_heading(get_string('pluginname', 'tool_kholland'));
 
@@ -38,9 +40,10 @@ echo $OUTPUT->heading($PAGE->title);
 
 echo html_writer::div(get_string('hello', 'tool_kholland', $id));
 $course = $DB->get_record_sql("SELECT shortname, fullname FROM {course} WHERE id = ?", [$id]);
-echo html_writer::div(format_string($course->fullname)); // You should use context here but
-// it will be introduced in the later versions.
-//echo(get_string('hello', 'tool_kholland'));
+$coursecontext = context_course::instance($id);
+require_capability('tool/kholland:view', $coursecontext);
+
+echo html_writer::div(format_string($course->fullname, true, ['context' => $coursecontext]));
 
 $table = new tool_kholland_table('tool_kholland', $id);
 $table->out(0, false);

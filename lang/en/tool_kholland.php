@@ -1,6 +1,8 @@
 <?php
 $string['pluginname'] = 'Dev test plugin';
 $string['completed'] = 'Completed';
+$string['kholland:edit'] = 'Edit entries';
+$string['kholland:view'] = 'View entries';
 $string['priority'] = 'Priority';
 $string['timecreated'] = 'Created';
 $string['timemodified'] = 'Modified';

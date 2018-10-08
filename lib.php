@@ -34,11 +34,13 @@ defined('MOODLE_INTERNAL') || die();
 
 // This adds item to course settings section.
 function tool_kholland_extend_navigation_course($navigation, $course, $context) {
-  $navigation->add(
-    get_string('pluginname', 'tool_kholland'),
-    new moodle_url('/admin/tool/kholland/index.php', ['id' => $course->id]),
-    navigation_node::TYPE_SETTING,
-    get_string('pluginname', 'tool_kholland'),
-    'kholland',
-    new pix_icon('icon', '', 'tool_kholland'));
+    if (has_capability('tool/kholland:view', $context)) {
+      $navigation->add(
+        get_string('pluginname', 'tool_kholland'),
+        new moodle_url('/admin/tool/kholland/index.php', ['id' => $course->id]),
+        navigation_node::TYPE_SETTING,
+        get_string('pluginname', 'tool_kholland'),
+        'kholland',
+        new pix_icon('icon', '', 'tool_kholland'));
+    }
 }
