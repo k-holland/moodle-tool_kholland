@@ -37,7 +37,7 @@ function tool_kholland_extend_navigation_course($navigation, $course, $context) 
     if (has_capability('tool/kholland:view', $context)) {
       $navigation->add(
         get_string('pluginname', 'tool_kholland'),
-        new moodle_url('/admin/tool/kholland/index.php', ['id' => $course->id]),
+        new moodle_url('/admin/tool/kholland/index.php', ['courseid' => $course->id]),
         navigation_node::TYPE_SETTING,
         get_string('pluginname', 'tool_kholland'),
         'kholland',

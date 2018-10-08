@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Displays recent and upcoming deadlines of activities based on course tags.
+ * Test plugin
  *
- * @package     report_multicoursetimeline
+ * @package     tool_kholland
  * @copyright   2018 Karen Holland <karen@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

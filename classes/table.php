@@ -50,13 +50,13 @@ class tool_kholland_table extends table_sql {
         global $CFG, $PAGE;
         parent::__construct($uniqueid);
 
-        $tablecolumns = array('name', 'completed', 'priority', 'timecreated', 'timemodified');
+        $tablecolumns = array('name', 'completed', 'priority', 'timecreated', 'timemodified', 'edit');
         $tableheaders = array(get_string('name'),
                               get_string('completed', 'tool_kholland'),
                               get_string('priority', 'tool_kholland'),
                               get_string('timecreated', 'tool_kholland'),
                               get_string('timemodified', 'tool_kholland'),
-                              '');
+                              get_string('edit'));
 
         $this->define_columns($tablecolumns);
         $this->define_headers($tableheaders);
@@ -68,7 +68,7 @@ class tool_kholland_table extends table_sql {
         $this->is_downloadable(false);
         $this->define_baseurl($PAGE->url);
         $this->context = context_course::instance($courseid);
-        $this->set_sql('name, completed, priority, timecreated, timemodified',
+        $this->set_sql('name, completed, priority, timecreated, timemodified, id',
             '{tool_kholland}', 'courseid = ?', [$courseid]);
     }
 
@@ -119,6 +119,16 @@ class tool_kholland_table extends table_sql {
      */
     public function col_timemodified($row) {
         return userdate($row->timemodified, get_string('strftimedatetime'));
+    }
+
+    /**
+     * Column time modified
+     *
+     * @param stdClass $row
+     * @return string
+     */
+    public function col_edit($row) {
+        return html_writer::link(new moodle_url('/admin/tool/kholland/edit.php', ['id' => $row->id]), get_string('edit'));
     }
 
 }

@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Displays recent and upcoming deadlines of activities based on course tags.
+ * Test plugin
  *
- * @package     report_multicoursetimeline
+ * @package     tool_kholland
  * @copyright   2018 Karen Holland <karen@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,27 +25,29 @@
 require(__DIR__.'/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 
-$id = required_param('id', PARAM_INT);
+$courseid = required_param('courseid', PARAM_INT);
 
-require_login($id);
-$context = context_course::instance($id);
+require_login($courseid);
+$context = context_course::instance($courseid);
 require_capability('tool/kholland:view', $context);
 
-$PAGE->set_url(new moodle_url('/admin/tool/kholland/index.php', array('id' => $id)));
+$PAGE->set_url(new moodle_url('/admin/tool/kholland/index.php', array('courseid' => $courseid)));
 $PAGE->set_title('Hello to the KHolland list');
 $PAGE->set_heading(get_string('pluginname', 'tool_kholland'));
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading($PAGE->title);
 
-echo html_writer::div(get_string('hello', 'tool_kholland', $id));
-$course = $DB->get_record_sql("SELECT shortname, fullname FROM {course} WHERE id = ?", [$id]);
-$coursecontext = context_course::instance($id);
+echo html_writer::div(get_string('hello', 'tool_kholland', $courseid));
+echo html_writer::link(new moodle_url('/admin/tool/kholland/edit.php', ['courseid' => $courseid]), get_string('add'));
+
+$course = $DB->get_record_sql("SELECT shortname, fullname FROM {course} WHERE id = ?", [$courseid]);
+$coursecontext = context_course::instance($courseid);
 require_capability('tool/kholland:view', $coursecontext);
 
 echo html_writer::div(format_string($course->fullname, true, ['context' => $coursecontext]));
 
-$table = new tool_kholland_table('tool_kholland', $id);
+$table = new tool_kholland_table('tool_kholland', $courseid);
 $table->out(0, false);
 
 echo $OUTPUT->footer();
