@@ -39,7 +39,10 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading($PAGE->title);
 
 echo html_writer::div(get_string('hello', 'tool_kholland', $courseid));
-echo html_writer::link(new moodle_url('/admin/tool/kholland/edit.php', ['courseid' => $courseid]), get_string('add'));
+
+if (has_capability('tool/kholland:edit', $context)) {
+    echo html_writer::link(new moodle_url('/admin/tool/kholland/edit.php', ['courseid' => $courseid]), get_string('add'));
+}
 
 $course = $DB->get_record_sql("SELECT shortname, fullname FROM {course} WHERE id = ?", [$courseid]);
 $coursecontext = context_course::instance($courseid);

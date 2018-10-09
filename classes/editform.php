@@ -22,20 +22,22 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->libdir.'/formslib.php');
 
 class kholland_form extends moodleform {
     //Add elements to form
     public function definition() {
-        global $CFG, $COURSE;
+        global $CFG;
  
         $mform = $this->_form; // Don't forget the underscore! 
  
         $mform->addElement('text', 'name', get_string('name')); // Add elements to your form
         $mform->setType('name', PARAM_NOTAGS);                   //Set type of element
         $mform->setDefault('name', 'Please enter name');        //Default value
-        $mform->addElement('advcheckbox', 'completed', '', get_string('completed', 'tool_kholland'), [], [0,1]);
-        $mform->addElement('hidden', 'courseid', $COURSE->id);
+        $mform->addElement('advcheckbox', 'completed', get_string('completed', 'tool_kholland'));
+        $mform->addElement('hidden', 'courseid');
         $mform->setType('courseid', PARAM_INT);
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
@@ -47,16 +49,14 @@ class kholland_form extends moodleform {
     function validation($data, $files) {
         global $DB;
 
-        $errors = [];
+        $errors = parent::validation($data, $files);
 
-        $entry = $DB->get_record('tool_kholland', ['name' => $data['name'], 'courseid' => $data['courseid']]);
-
-print_r($entry);
-print_r($data);
-            // Need validation to ignore edits.
-            if (($entry) && ($entry->id != $data['id'])) {
+        // Check that name is unique for the course.
+        if ($DB->record_exists_select('tool_kholland',
+                'name = :name AND id <> :id AND courseid = :courseid',
+                ['name' => $data['name'], 'id' => $data['id'], 'courseid' => $data['courseid']])) {
                 $errors['name'] = get_string('nameerror', 'tool_kholland');
-            }
+        }
 
         return $errors;
     }
