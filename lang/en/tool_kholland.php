@@ -7,6 +7,7 @@ $string['priority'] = 'Priority';
 $string['timecreated'] = 'Created';
 $string['timemodified'] = 'Modified';
 $string['editentry'] = 'Edit entry';
+$string['editentrytitle'] = 'Edit entry {$a}';
 $string['hello'] = 'Hello World, id is {$a}';
 $string['kholland'] = 'Tool name';
 $string['name'] = 'Name';

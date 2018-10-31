@@ -129,13 +129,17 @@ class tool_kholland_table extends table_sql {
     }
 
     /**
-     * Column time modified
+     * Column edit link
      *
      * @param stdClass $row
      * @return string
      */
     protected function col_edit($row) {
-        return html_writer::link(new moodle_url('/admin/tool/kholland/edit.php', ['id' => $row->id]), get_string('edit'));
+        $title = get_string('editentrytitle', 'tool_kholland', format_string($row->name));
+        $url = new moodle_url('/admin/tool/kholland/edit.php', ['id' => $row->id]);
+        $deleteurl = new moodle_url('/admin/tool/kholland/index.php',
+            ['courseid' => $this->context->instanceid, 'delete' => $row->id, 'sesskey' => sesskey()]);
+        return html_writer::link($url, get_string('edit'), ['title' => $title]) . '<br>' .
+            html_writer::link($deleteurl, get_string('delete'));
     }
-
 }

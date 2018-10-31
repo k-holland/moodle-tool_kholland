@@ -31,6 +31,14 @@ require_login($courseid);
 $context = context_course::instance($courseid);
 require_capability('tool/kholland:view', $context);
 
+if (($deleteid = optional_param('delete', null, PARAM_INT)) && (confirm_sesskey())) {
+    $record = $DB->get_record('tool_kholland', ['id' => $deleteid], '*', MUST_EXIST);
+    require_login(get_course($record->courseid));
+    require_capability('tool/kholland:edit', context_course::instance($record->courseid));
+    $DB->delete_records('tool_kholland', ['id' => $deleteid]);
+    redirect(new moodle_url('/admin/tool/kholland/index.php', ['courseid' => $record->courseid]));
+}
+
 $PAGE->set_url(new moodle_url('/admin/tool/kholland/index.php', array('courseid' => $courseid)));
 $PAGE->set_title('Hello to the KHolland list');
 $PAGE->set_heading(get_string('pluginname', 'tool_kholland'));
