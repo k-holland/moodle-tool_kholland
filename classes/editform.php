@@ -29,7 +29,7 @@ require_once($CFG->libdir.'/formslib.php');
 class kholland_form extends moodleform {
     //Add elements to form
     public function definition() {
-        global $CFG;
+        global $CFG, $PAGE;
  
         $mform = $this->_form; // Don't forget the underscore! 
  
@@ -41,6 +41,9 @@ class kholland_form extends moodleform {
         $mform->setType('courseid', PARAM_INT);
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
+        $mform->addElement('editor', 'description_editor', 
+            get_string('description', 'tool_kholland'), 
+            null, tool_kholland_api::editor_options());
 
         $this->add_action_buttons();
     }

@@ -44,3 +44,51 @@ function tool_kholland_extend_navigation_course($navigation, $course, $context) 
         new pix_icon('icon', '', 'tool_kholland'));
     }
 }
+
+/**
+ * Serve the embedded files.
+ *
+ * @param stdClass $course the course object
+ * @param stdClass $cm the course module object
+ * @param context $context the context
+ * @param string $filearea the name of the file area
+ * @param array $args extra arguments (itemid, path)
+ * @param bool $forcedownload whether or not force download
+ * @param array $options additional options affecting the file serving
+ * @return bool false if the file not found, just send the file otherwise and do not return anything
+ */
+function tool_kholland_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+    global $DB;
+
+    if ($context->contextlevel != CONTEXT_COURSE) {
+        return false;
+    }
+
+    if ($filearea !== 'entry') {
+        return false;
+    }
+
+    require_login($course);
+    require_capability('tool/kholland:view', $context);
+
+    $itemid = array_shift($args);
+
+    $entry = tool_kholland_api::retrieve($itemid);
+
+    $filename = array_pop($args);
+
+    if (!$args) {
+        $filepath = '/';
+    } else {
+        $filepath = '/'.implode('/', $args).'/';
+    }
+
+    $fs = get_file_storage();
+    $file = $fs->get_file($context->id, 'tool_kholland', $filearea, $itemid, $filepath, $filename);
+
+    if (!$file) {
+        return false;
+    }
+
+    send_stored_file($file, null, 0, $forcedownload, $options);
+}

@@ -50,8 +50,9 @@ class tool_kholland_table extends table_sql {
         global $CFG, $PAGE;
         parent::__construct($uniqueid);
 
-        $tablecolumns = array('name', 'completed', 'priority', 'timecreated', 'timemodified');
+        $tablecolumns = array('name', 'description', 'completed', 'priority', 'timecreated', 'timemodified');
         $tableheaders = array(get_string('name'),
+                              get_string('description', 'tool_kholland'),
                               get_string('completed', 'tool_kholland'),
                               get_string('priority', 'tool_kholland'),
                               get_string('timecreated', 'tool_kholland'),
@@ -75,7 +76,8 @@ class tool_kholland_table extends table_sql {
         $this->is_downloadable(false);
         $this->define_baseurl($PAGE->url);
         $this->context = context_course::instance($courseid);
-        $this->set_sql('name, completed, priority, timecreated, timemodified, id',
+        $this->set_sql('name, completed, priority, timecreated, timemodified, id,'.
+            'description, descriptionformat',
             '{tool_kholland}', 'courseid = ?', [$courseid]);
     }
 
@@ -108,6 +110,23 @@ class tool_kholland_table extends table_sql {
         return format_string($row->name, true,
             ['context' => $this->context]);
     }
+
+    /**
+     * Displays column description
+     *
+     * @param stdClass $row
+     * @return string
+     */
+    protected function col_description($row) {
+        global $PAGE;
+
+        $options = tool_kholland_api::editor_options();
+        $description = file_rewrite_pluginfile_urls($row->description, 'pluginfile.php',
+            $options['context']->id, 'tool_kholland', 'entry', $row->id, $options);
+
+        return format_text($description, $row->descriptionformat, $options);
+    }
+
      /**
      * Displays column timecreated
      *

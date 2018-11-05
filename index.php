@@ -32,10 +32,10 @@ $context = context_course::instance($courseid);
 require_capability('tool/kholland:view', $context);
 
 if (($deleteid = optional_param('delete', null, PARAM_INT)) && (confirm_sesskey())) {
-    $record = $DB->get_record('tool_kholland', ['id' => $deleteid], '*', MUST_EXIST);
+    $record = tool_kholland_api::retrieve($deleteid, $courseid);
     require_login(get_course($record->courseid));
     require_capability('tool/kholland:edit', context_course::instance($record->courseid));
-    $DB->delete_records('tool_kholland', ['id' => $deleteid]);
+    tool_kholland_api::delete($record->id);
     redirect(new moodle_url('/admin/tool/kholland/index.php', ['courseid' => $record->courseid]));
 }
 
@@ -76,5 +76,3 @@ echo html_writer::div(s($userinput)); // Used when you want to escape the value.
 echo html_writer::div(format_string($userinput)); // Used for one-line strings, such as forum post subject.
 echo html_writer::div(format_text($userinput)); // Used for multil-line rich-text contents such as forum post body.
 */
- 
-echo $output->footer();

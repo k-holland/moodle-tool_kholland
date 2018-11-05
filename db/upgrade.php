@@ -82,6 +82,27 @@ function xmldb_tool_kholland_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2018091902, 'tool', 'kholland');
     }
 
+    if ($oldversion < 2018110200) {
+
+        // Define field description to be added to tool_kholland.
+        $table = new xmldb_table('tool_kholland');
+        $field = new xmldb_field('description', XMLDB_TYPE_TEXT, null, null, null, null, null, 'timemodified');
+
+        // Conditionally launch add field description.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('descriptionformat', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'description');
+
+        // Conditionally launch add field descriptionformat.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Kholland savepoint reached.
+        upgrade_plugin_savepoint(true, 2018110200, 'tool', 'kholland');
+    }
 
     return true;
 }

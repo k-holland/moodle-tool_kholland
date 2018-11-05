@@ -27,14 +27,14 @@ require_once(__DIR__.'/classes/editform.php');
 
 $id = optional_param('id', 0, PARAM_INT);
 if ($id) {
-    $entry = $DB->get_record('tool_kholland', ['id' => $id], '*', MUST_EXIST);
+    $entry = tool_kholland_api::retrieve($id);
     $courseid = $entry->courseid;
     $urlparams = ['id' => $id];
     $title = get_string('editentry', 'tool_kholland');
 } else {
     $entry = new stdClass();
     $courseid = required_param('courseid', PARAM_INT);
-    $entry = (object)['courseid' => $courseid];
+    $entry = (object)['id' => null, 'courseid' => $courseid];
     $urlparams = ['courseid' => $courseid];
     $title = get_string('addentry', 'tool_kholland');
 }
@@ -49,6 +49,16 @@ $PAGE->set_heading(get_string('pluginname', 'tool_kholland'));
 
 //Instantiate simplehtml_form 
 $mform = new kholland_form();
+
+$textfieldoptions = array('maxfiles'=>-1, 'maxbytes'=>0, 'context'=>$PAGE->context);
+
+if (!empty($entry->id)) {
+    // Preparing editor data
+    file_prepare_standard_editor($entry, 'description', 
+        tool_kholland_api::editor_options(), $PAGE->context, 
+        'tool_kholland', 'entry', $entry->id);
+}
+
 $mform->set_data($entry);
 
 $returnurl = new moodle_url('/admin/tool/kholland/index.php', ['courseid' => $courseid]); 
@@ -61,25 +71,36 @@ if ($mform->is_cancelled()) {
   //In this case you process validated data. $mform->get_data() returns data posted in form.
 
     if ($data->id == 0) {
-        $DB->insert_record('tool_kholland', [
-            'courseid' => $data->courseid,
-            'name' => $data->name,
-            'completed' => $data->completed,
-            'priority' => 0,
-            'timecreated' => time(),
-            'timemodified' => time()
-        ]);
+
+        $insertdata = array_intersect_key((array)$data,
+            ['courseid' => 1, 'name' => 1, 'completed' => 1, 'priority' => 1,
+            'description' => 1, 'descriptionformat' => 1]);
+        $insertdata['timemodified'] = $insertdata['timecreated'] = time();
+        $entryid = tool_kholland_api::insert((object)$insertdata);
+
+        // Entry id known, now can update editor data
+        if (isset($data->description_editor)) {
+           $data = file_postupdate_standard_editor($data, 'description',
+                $textfieldoptions, $PAGE->context, 'tool_devcourse', 'entry', $entryid); 
+            $updatedata = ['id' => $entryid, 'description' => $data->description,
+                'descriptionformat' => $data->descriptionformat];
+            tool_kholland_api::update((object)$updatedata);
+        }
+
         // TODO there should be a function in another file that creates an entry.
 
     } else {
         // Edit entry. Never modify courseid.
-        $DB->update_record('tool_kholland', [
-            'id' => $data->id,
-            'name' => $data->name,
-            'completed' => $data->completed,
-            'timemodified' => time()
-        ]);
-        // TODO there should be a function in another file that updates an entry.
+
+        if (isset($data->description_editor)) {
+            $data = file_postupdate_standard_editor($data, 'description',
+                $textfieldoptions, $PAGE->context, 'tool_kholland', 'entry', $data->id);
+        }
+
+        $updatedata = array_intersect_key((array)$data, 
+            ['id' => 1, 'name' => 1, 'completed' => 1, 'priority' => 1, 
+            'description' => 1, 'descriptionformat' => 1]); 
+        tool_kholland_api::update((object)$updatedata);
     }
 
     redirect($returnurl);
