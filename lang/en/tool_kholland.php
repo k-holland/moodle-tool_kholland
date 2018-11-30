@@ -16,4 +16,5 @@ $string['name'] = 'Name';
 $string['nameerror'] = 'Only a unique name per course is allowed';
 $string['newentry'] = 'New entry';
 $string['navlink'] = 'KHolland URL';
+$string['title'] = 'KHolland Title';
 $string['toolkholland'] = 'Tool name 2';

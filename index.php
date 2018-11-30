@@ -43,25 +43,13 @@ $PAGE->set_url(new moodle_url('/admin/tool/kholland/index.php', array('courseid'
 $PAGE->set_title('Hello to the KHolland list');
 $PAGE->set_heading(get_string('pluginname', 'tool_kholland'));
 
-echo $OUTPUT->header();
-echo $OUTPUT->heading($PAGE->title);
+$outputpage = new \tool_kholland\output\index_page($courseid);
+$output = $PAGE->get_renderer('tool_kholland');
 
-echo html_writer::div(get_string('hello', 'tool_kholland', $courseid));
+echo $output->header();
+echo $output->render($outputpage);
+echo $output->footer();
 
-if (has_capability('tool/kholland:edit', $context)) {
-    echo html_writer::link(new moodle_url('/admin/tool/kholland/edit.php', ['courseid' => $courseid]), get_string('add'));
-}
-
-$course = $DB->get_record_sql("SELECT shortname, fullname FROM {course} WHERE id = ?", [$courseid]);
-$coursecontext = context_course::instance($courseid);
-require_capability('tool/kholland:view', $coursecontext);
-
-echo html_writer::div(format_string($course->fullname, true, ['context' => $coursecontext]));
-
-$table = new tool_kholland_table('tool_kholland', $courseid);
-$table->out(0, false);
-
-echo $OUTPUT->footer();
 
 // Custom renderer
 // Testing output functions here
