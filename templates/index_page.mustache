@@ -43,7 +43,20 @@
   <div><a role="button" href="{{addlink}}" class="btn btn-primary"> {{# str }} add {{/ str }}</a></div>
   {{/addlink}}
   <p>Courseid {{courseid}}</p>
+  <div><a role="button" href="#" class="btn btn-primary deleteentry"> Delete test </a></div>
 
   {{{khtable}}}
 
 </div>
+
+{{#js}}
+    require(
+    [
+    'tool_kholland/firstjs'
+    ],
+    function(
+    c
+    ) {
+    c.init('[data-action=deleteentry]');
+    });
+{{/js}}

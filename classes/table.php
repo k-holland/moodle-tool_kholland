@@ -159,6 +159,6 @@ class tool_kholland_table extends table_sql {
         $deleteurl = new moodle_url('/admin/tool/kholland/index.php',
             ['courseid' => $this->context->instanceid, 'delete' => $row->id, 'sesskey' => sesskey()]);
         return html_writer::link($url, get_string('edit'), ['title' => $title]) . '<br>' .
-            html_writer::link($deleteurl, get_string('delete'));
+            html_writer::link($deleteurl, get_string('delete'), ['class' => 'deleteentry']);
     }
 }
